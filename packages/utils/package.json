@@ -17,13 +17,13 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@sk/eslint-config": "workspace:^0.0.0",
-    "@sk/prettier-config": "workspace:^0.0.0",
-    "@sk/tsconfig": "workspace:^0.0.0",
-    "@types/node": "^20",
-    "eslint": "^8.56.0",
-    "prettier": "^3.2.4",
-    "typescript": "^5.3.3"
+    "@sk/eslint-config": "workspace:^",
+    "@sk/prettier-config": "workspace:^",
+    "@sk/tsconfig": "workspace:^",
+    "@types/node": "^20.11.30",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.2"
   },
   "eslintConfig": {
     "root": true,
