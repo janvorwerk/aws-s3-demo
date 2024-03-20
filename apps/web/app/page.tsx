@@ -1,5 +1,5 @@
 import { FilePicker } from "@/app/_lib/file-picker";
-import { getBucket, STORAGE_KEY } from "@/app/_lib/s3";
+import { getBucket, STORAGE_KEY } from "@sk/aws/s3";
 
 export const dynamic = "force-dynamic";
 

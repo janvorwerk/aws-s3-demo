@@ -1,5 +1,5 @@
-import { computeHashValue } from "@/app/_lib/hashing";
-import { fetchInS3, getBucket, STORAGE_KEY } from "@/app/_lib/s3";
+import { computeHashValue } from "@sk/utils/hash";
+import { fetchInS3, getBucket, STORAGE_KEY } from "@sk/aws/s3";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { NextResponse } from "next/server";
 

@@ -1,0 +1,14 @@
+{
+  "name": "@sk/tsconfig",
+  "private": true,
+  "version": "0.0.0",
+  "files": [
+    "base.json",
+    "nextjs.json"
+  ],
+  "scripts": {
+    "lint": "echo no eslint",
+    "typecheck": "echo no typecheck"
+
+  }
+}

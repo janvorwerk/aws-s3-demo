@@ -1,7 +1,3 @@
-import fs from "node:fs/promises";
-import os from "os";
-import path from "path";
-import type { Readable } from "stream";
 import {
   DeleteObjectCommand,
   GetObjectCommand,
@@ -9,7 +5,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import { computeHashValue } from "./hashing";
+import type { Readable } from "stream";
 
 export const S3_REGION = "eu-central-1";
 
@@ -112,83 +108,12 @@ class SkS3Bucket implements Bucket {
 }
 
 /**
- * Local disk storage for offline dev
- */
-class SkDevBucket implements Bucket {
-  private folder: string;
-  constructor() {
-    this.folder = process.env.DEV_S3_FOLDER ?? `${os.homedir()}/.s3`;
-  }
-
-  private buildFilename(key: string) {
-    return `${this.folder}/${key}`;
-  }
-
-  async exists(key: string) {
-    try {
-      const filename = this.buildFilename(key);
-      try {
-        await fs.access(filename, fs.constants.R_OK);
-        return true;
-      } catch (err) {
-        return false;
-      }
-    } catch (error) {
-      console.error("Could not check existence in DEV s3", { error });
-      throw error;
-    }
-  }
-  async get_byte_array(key: string): Promise<Uint8Array> {
-    try {
-      const filename = this.buildFilename(key);
-      const buffer = await fs.readFile(filename);
-      return new Uint8Array(buffer);
-    } catch (error) {
-      console.error("Could not read from DEV s3", { error });
-      throw error;
-    }
-  }
-
-  async put(key: string, value: Uint8Array | Buffer, sha256: string, meta?: Record<string, string> | undefined) {
-    try {
-      const hash = await computeHashValue(value);
-      if (hash != sha256) {
-        console.error(`Cannot store ${key} to dev S3: hash mismatch`, { expected: sha256, got: hash });
-        throw new Error(`Cannot store ${key} to dev S3: hash mismatch`);
-      }
-      const filename = this.buildFilename(key);
-      await fs.mkdir(path.dirname(filename), { recursive: true });
-      await fs.writeFile(filename, value);
-      if (meta) {
-        await fs.writeFile(`${filename}.json`, JSON.stringify(meta));
-      }
-    } catch (error) {
-      console.error("Could not store to DEV s3", { error });
-      throw error;
-    }
-  }
-
-  async delete(key: string) {
-    try {
-      const filename = this.buildFilename(key);
-      await fs.unlink(filename);
-      await fs.unlink(`${filename}.json`);
-    } catch (error) {
-      console.error("Could not delete from DEV s3", { error });
-      throw error;
-    }
-  }
-}
-
-/**
  * Gets the S3 bucket
  */
 export function getBucket() {
   if (process.env.AWS_ACCESS_KEY && process.env.AWS_ACCESS_SECRET) {
     const bucket = new SkS3Bucket(process.env.AWS_ACCESS_KEY, process.env.AWS_ACCESS_SECRET);
     return bucket;
-  } else if (process.env.NODE_ENV !== "production") {
-    return new SkDevBucket();
   }
   console.error("Missing AWS environment variable", {
     SK_AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY != undefined,

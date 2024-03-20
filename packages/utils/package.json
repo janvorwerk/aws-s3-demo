@@ -1,0 +1,35 @@
+{
+  "name": "@sk/utils",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./time": "./time.ts",
+    "./hash": {
+      "types": "./hash/index.d.ts",
+      "node": "./hash/hash.node.ts",
+      "default": "./hash/hash.browser.ts"
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint .",
+    "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@sk/eslint-config": "workspace:^0.0.0",
+    "@sk/prettier-config": "workspace:^0.0.0",
+    "@sk/tsconfig": "workspace:^0.0.0",
+    "@types/node": "^20",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.4",
+    "typescript": "^5.3.3"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@sk/eslint-config/base"
+    ]
+  },
+  "prettier": "@sk/prettier-config"
+}
